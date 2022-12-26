@@ -17,14 +17,14 @@ end state;
 
 architecture Behavioral of state is
     type states is (
-        state_ready,
-        state_wait_btn_release,
-        state_randomtime,
-        state_counting,
-        state_counter_wait_btn_press_debounce,
-        state_counter_wait_btn_release
+        ready,
+        prng_wait_btn_release,
+        randomtime,
+        counting,
+        wait_btn_press,
+        wait_btn_release
     );
-    signal state: states := state_ready;
+    signal state: states := ready;
     signal button_debounced: std_logic;
     
     component debounce is
@@ -47,7 +47,7 @@ begin
     statechange: process(clk_in, reset_in)
     begin
         if reset_in = '0' then
-            state       <= state_ready;
+            state       <= ready;
             ready_out   <= '0';
             random_out  <= '0';
             timer_out   <= '0';
@@ -55,65 +55,65 @@ begin
         else
             if rising_edge(clk_in) then
                 case state is
-                when state_ready =>
+                when ready =>
                     ready_out   <= '1';
                     random_out  <= '0';
                     timer_out   <= '0';
                     display_out <= '1';
                     if button_debounced = '1' then
-                        state <= state_wait_btn_release;
+                        state <= prng_wait_btn_release;
                     end if;
                 
-                when state_wait_btn_release =>
+                when prng_wait_btn_release =>
                     ready_out   <= '0';
                     random_out  <= '0';
                     timer_out   <= '0';
                     display_out <= '0';
                     if button_debounced = '0' then
-                        state <= state_randomtime;
+                        state <= randomtime;
                     end if;
                     
-                when state_randomtime =>
+                when randomtime =>
                     ready_out   <= '0';
                     random_out  <= '1';
                     timer_out   <= '0';
                     display_out <= '0';
                     if timeout_in = '1' then
-                        state <= state_counting;
+                        state <= counting;
                     end if;
                     
-                when state_counting =>
+                when counting =>
                     ready_out   <= '0';
                     random_out  <= '0';
                     timer_out   <= '1';
                     display_out <= '1';
                     if overflow_in = '1' then
-                        state <= state_ready;
+                        state <= ready;
                     end if;
                     if button_in = '1' then -- Don't debounce button at this point to get immediate response. Debouncing will happen in next state. 
-                        state <= state_counter_wait_btn_press_debounce;
+                        state <= wait_btn_press;
                     end if;
                     
-                when state_counter_wait_btn_press_debounce =>
+                when wait_btn_press =>
                     ready_out   <= '0';
                     random_out  <= '0';
                     timer_out   <= '0';
                     display_out <= '1';
                     if button_debounced = '1' then
-                        state <= state_counter_wait_btn_release;
+                        state <= wait_btn_release;
                     end if;
                     
-                when state_counter_wait_btn_release =>
+                when wait_btn_release =>
                     ready_out   <= '0';
                     random_out  <= '0';
                     timer_out   <= '0';
                     display_out <= '1';
                     if button_debounced = '0' then
-                        state <= state_ready;
+                        state <= ready;
                     end if;
         
                 when others =>
-                    state <= state_ready;
+                    state <= ready;
                 end case;
             end if;
         end if;
