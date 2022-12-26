@@ -7,19 +7,20 @@ entity bcd_counter is
         enable_in : in  std_logic;
         clk_in    : in  std_logic;
         reset_in  : in  std_logic;
-        carry_out : out std_logic;
-        bcd_out   : out std_logic_vector(3 downto 0)
+        carry_out : out std_logic := '0';
+        bcd_out   : out std_logic_vector(3 downto 0) := (others => '0')
     );
 end entity bcd_counter;
 
 architecture Behavioral of bcd_counter is
-    signal counter : std_logic_vector(3 downto 0);
+    signal counter : std_logic_vector(3 downto 0) := (others => '0');
 begin
 
     count: process(clk_in, reset_in)
     begin
         if reset_in = '0' then
-            counter <= (others => '0');
+            counter   <= (others => '0');
+            carry_out <= '0';
         else
             if(rising_edge(clk_in)) then
                 if(enable_in = '1') then
