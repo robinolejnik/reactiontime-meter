@@ -3,8 +3,8 @@
 ## - uncomment the lines corresponding to used pins
 ## - rename the used ports (in each line, after get_ports) according to the top level signal names in the project
 
-set_property BITSTREAM.GENERAL.COMPRESS TRUE [get_designs synth_1]
-set_property BITSTREAM.CONFIG.CONFIGRATE 33 [get_designs synth_1]
+set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
+set_property BITSTREAM.CONFIG.CONFIGRATE 33 [current_design]
 set_property config_mode SPIx4 [current_design]
 
 ## Clock signal
