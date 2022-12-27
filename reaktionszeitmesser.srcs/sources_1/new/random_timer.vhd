@@ -9,7 +9,7 @@ entity random_timer is
         clk_prng_in : in  std_logic;
         clk_time_in : in  std_logic;
         enable_in   : in  std_logic;
-        timeout_out : out std_logic
+        timeout_out : out std_logic := '0'
     );
 end entity random_timer;
 
