@@ -22,7 +22,7 @@ architecture bench of bcd_counter_tb is
         );
     end component bcd_counter;
 begin
-    cnt1000: bcd_counter port map(
+    cnt: bcd_counter port map(
         enable_in => counter_enable,
         clk_in    => clk,
         reset_in  => reset,
