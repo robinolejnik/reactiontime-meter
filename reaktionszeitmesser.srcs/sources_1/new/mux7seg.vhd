@@ -1,6 +1,6 @@
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.numeric_std.all;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 entity mux7seg is
     Port (
@@ -9,8 +9,8 @@ entity mux7seg is
         bcd_in      : in  std_logic_vector(31 downto 0);
         dp_in       : in  std_logic_vector(7 downto 0);
         segment_out : out std_logic_vector(6 downto 0);
-        digit_out   : out std_logic_vector(7 downto 0);
-        dp_out      : out std_logic
+        digit_out   : out std_logic_vector(7 downto 0) := "11111111";
+        dp_out      : out std_logic                    := '1'
     );
 end mux7seg;
 
@@ -69,10 +69,14 @@ begin
         end if;
     end process;
 
-    cnt_update: process(clk_in)
+    cnt_update: process(reset_in, clk_in)
     begin
-        if rising_edge(clk_in) then
-            selected_digit <= std_logic_vector(unsigned(selected_digit) + 1);
+        if reset_in = '0' then
+            selected_digit <= (others => '0');
+        else
+            if rising_edge(clk_in) then
+                selected_digit <= std_logic_vector(unsigned(selected_digit) + 1);
+            end if;
         end if;
     end process cnt_update;
 
