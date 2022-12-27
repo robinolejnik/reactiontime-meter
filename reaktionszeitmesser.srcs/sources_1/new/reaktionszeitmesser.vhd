@@ -1,6 +1,6 @@
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 entity reaktionszeitmesser is
     Port(
@@ -16,9 +16,8 @@ entity reaktionszeitmesser is
 end reaktionszeitmesser;
 
 architecture Behavioral of reaktionszeitmesser is
-    signal clk_1khz      : std_logic;
     signal clk_100khz    : std_logic;
-    signal clk_1hz       : std_logic;
+    signal clk_1khz      : std_logic;
 
     signal bcd_carry0    : std_logic;
     signal bcd_carry1    : std_logic;
@@ -92,22 +91,16 @@ architecture Behavioral of reaktionszeitmesser is
 
 begin
     -- ########## clock divider
-    clk_divider_1khz: clock_divider generic map(f_in => 100e6, f_out => 1e3) port map(
-        reset_in => reset,
-        clk_in   => clk_100mhz,
-        clk_out  => clk_1khz
-    );
-
-    clk_divider_50hz: clock_divider generic map(f_in => 100e6, f_out => 100e3) port map(
+    clk_divider_100khz: clock_divider generic map(f_in => 100e6, f_out => 100e3) port map(
         reset_in => reset,
         clk_in   => clk_100mhz,
         clk_out  => clk_100khz
     );
-
-    clk_divider_1hz: clock_divider generic map(f_in => 100e6, f_out => 1e0) port map(
+    
+    clk_divider_1khz: clock_divider generic map(f_in => 100e6, f_out => 1e3) port map(
         reset_in => reset,
         clk_in   => clk_100mhz,
-        clk_out  => clk_1hz
+        clk_out  => clk_1khz
     );
 
     -- ########## 7-segment display
