@@ -6,6 +6,7 @@ entity mux7seg is
     Port (
         clk_in      : in  std_logic;
         reset_in    : in  std_logic;
+        enable_in   : in  std_logic;
         bcd_in      : in  std_logic_vector(31 downto 0);
         dp_in       : in  std_logic_vector(7 downto 0);
         segment_out : out std_logic_vector(6 downto 0);
@@ -28,7 +29,7 @@ architecture Behavioral of mux7seg is
 begin
     process(reset_in, clk_in, bcd_in, dp_in)
     begin
-        if reset_in = '0' then
+        if reset_in = '0' or enable_in = '0' then
             dp_out <= '1';
             digit_out <= "11111111";
         elsif rising_edge(clk_in) then

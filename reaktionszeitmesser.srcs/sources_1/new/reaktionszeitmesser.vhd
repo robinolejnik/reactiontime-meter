@@ -46,6 +46,7 @@ architecture Behavioral of reaktionszeitmesser is
         port(
             clk_in      : in  std_logic;
             reset_in    : in  std_logic;
+            enable_in   : in  std_logic;
             bcd_in      : in  std_logic_vector(31 downto 0);
             dp_in       : in  std_logic_vector(7 downto 0);
             segment_out : out std_logic_vector(6 downto 0);
@@ -107,6 +108,7 @@ begin
     segment_display: mux7seg port map(
         clk_in      => clk_1khz,
         reset_in    => reset,
+        enable_in   => display_on,
         bcd_in      => bcd,
         segment_out => a_to_g,
         digit_out   => an,
@@ -171,14 +173,14 @@ begin
     overflow <= '1' when display_bcd = x"9999" else '0';
     
     -- Show "ovEr" on counter overflow
-    bcd(31 downto 16) <= x"BCED" when overflow = '1' and display_on = '1' else x"FFFF";
+    bcd(31 downto 16) <= x"BCED" when overflow = '1' else x"FFFF";
     
     -- Display counter value (time)
-    bcd(15 downto 0)  <= display_bcd when display_on = '1' else (others => '1');
+    bcd(15 downto 0)  <= display_bcd;
     
     -- Fixed decimal point
-    dp_set            <= "11110111"  when display_on = '1' else (others => '1');
-    
+    dp_set            <= "11110111";
+       
     -- Ready LED
     led_g             <= ready and clk_1khz;
     
